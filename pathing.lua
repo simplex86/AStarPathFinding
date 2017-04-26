@@ -1,15 +1,5 @@
 require("map")
-
--- 判断坐标(row, column)是否存在于节点链表中
-local function existed(nodes, row, column)
-	for _, v in ipairs(nodes) do
-		if v.row == row and v.column == column then
-			return true
-		end
-	end
-
-	return false
-end
+require("list")
 
 -- 获取权值
 local function G(row, column, parent_row, parent_column)
@@ -56,65 +46,6 @@ local function table2string(list, s)
 	return txt
 end
 
----------------------------------------------------------------------
-
-local openlist = {nodes = {}, length = 0}
-
--- 添加node
-function openlist:add(node)
-	table.insert(self.nodes, node)
-	self.length = self.length + 1
-end
-
--- 移除node
-function openlist:remove(node)
-	local index = 0
-
-	for k, v in ipairs(self.nodes) do
-		if v.row == node.row and v.column == node.column then
-			index = k
-			break
-		end
-	end
-
-	if index > 0 then
-		table.remove(self.nodes, index)
-		self.length = math.max(0, self.length - 1)
-	end
-end
-
--- 判断node是否存在
-function openlist:existed(node)
-	return existed(self.nodes, node.row, node.column)
-end
-
--- 清空列表
-function openlist:clear()
-	self.nodes = {}
-	self.length = 0
-end
-
----------------------------------------------------------------------
-
-local closelist = {nodes = {}}
-
--- 添加node
-function closelist:add(node)
-	table.insert(self.nodes, node)
-end
-
--- 判断node是否存在
-function closelist:existed(node)
-	return existed(self.nodes, node.row, node.column)
-end
-
--- 清空列表
-function closelist:clear()
-	self.nodes = {}
-end
-
----------------------------------------------------------------------
-
 -- 获取4连通邻点
 local function neighbour4(row, column)
 	local nodes = {{row = row,     column = column + 1},
@@ -137,6 +68,11 @@ local function neighbour8(row, column)
 
 	return nodes
 end
+
+---------------------------------------------------------------------
+
+local openlist = createlist()
+local closelist = createlist()
 
 -- 探索下一步
 local function seek(map, target_row, target_column)
@@ -203,6 +139,8 @@ local function seek(map, target_row, target_column)
 
 	return seek(map, target_row, target_column)
 end
+
+-----------------------------------------------------------------------
 
 -- 寻路
 function pathing(map, from_row, from_column, to_row, to_column)
