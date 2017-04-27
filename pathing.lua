@@ -20,32 +20,6 @@ local function H(row, column, target_row, target_column)
 	return manhatton_valuation(row, column, target_row, target_column) * 10
 end
 
--- 将table转换为string，调试用
-local function table2string(list, s)
-	s = s or 0
-	local txt = "{\n"
-
-	for k, v in pairs(list) do
-		local exp = txt .. string.rep("\t", s + 1) .. k .. "="
-		local tp = type(v)
-
-		if tp == "number" then
-			txt = exp .. v .. ",\n"
-		elseif tp == "boolean" then
-			txt = exp .. tostring(v) .. ",\n"
-		elseif tp == "string" then
-			txt = exp .. string.format("%q,\n", v)
-		elseif tp == "table" then
-			txt = exp .. table2string(v, s + 1) .. ",\n"
-		else
-			-- error("can not serialize a value with [" .. tp .. "] type")
-		end
-	end 
-
-	txt = txt .. string.rep("\t", s) .. "}"
-	return txt
-end
-
 -- 获取4连通邻点
 local function neighbour4(row, column)
 	local nodes = {{row = row,     column = column + 1},
